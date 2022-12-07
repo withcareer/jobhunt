@@ -1,46 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
-import React, {useState, useEffect} from 'react';
-import axios from "axios";
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import "./reset.css"
+import Main from './js/Main.js';
+import Login from './js/Auth/Login.js'
+import Join from './js/Auth/Join';
+import MyPage from './js/MyPage';
+
 
 function App() {
-  const [message, setMessage]=useState('');
 
-    function callback(str) {
-        setMessage(str);
-    }
-
-    useEffect(
-        () => {
-            axios.get('/home')
-            .then((res) => {
-                console.log(res.data);
-                callback(res.data);
-            })
-        }, []
-    );
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-          <ul>
-              {message}
-          </ul>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path = '/' element = {<Main/>}/>
+        <Route path='/login' element={<Login />}/>
+        <Route path='/join' element={<Join />}/>
+        <Route path='/myPage' element={<MyPage />}/>
+
+      </Routes>
+    </BrowserRouter>
   );
 }
+
+
+
 
 export default App;
