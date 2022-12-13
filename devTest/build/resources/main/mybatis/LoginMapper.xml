@@ -5,22 +5,22 @@
 <mapper namespace="com.devtest.devtest.mapper.LoginMapper">
     <select id="getUser" parameterType="String" resultType="User">
         SELECT   *
-        FROM    COOL_3_MEAL_USER
+        FROM    huntuser
         WHERE   email = #{email}
     </select>
 
     <select id="getNickname" parameterType="String" resultType="User">
         SELECT   *
-        FROM    COOL_3_MEAL_USER
+        FROM    huntuser
         WHERE   nickname = #{nickname}
     </select>
 
     <insert id="insertUser" keyProperty="uno">
         <selectKey keyProperty="uno" resultType="int" order="BEFORE">
             SELECT COALESCE(MAX(uno), 0) + 1 AS uno
-            FROM   COOL_3_MEAL_USER
+            FROM   huntuser
         </selectKey>
-        INSERT INTO COOL_3_MEAL_USER (uno, email, pass, nickname, sex, birth, phone)
+        INSERT INTO huntuser (uno, email, pass, nickname, sex, birth, phone)
         VALUES (#{uno}, #{email}, #{pass}, #{nickname}, #{sex}, #{birth}, #{phone})
     </insert>
 
