@@ -21,6 +21,11 @@ function Main() {
 function MainContainer() {
     const [message, setMessage] = useState('');
 
+    // company 정보가 담겨있는 useState예요
+    const [company, setCompany] = useState([]);
+    // search 구현을 위한 사용자의 쿼리 입력 값을 담아요
+    const [user, setUser] = useState("");
+
     function callback(str) {
         setMessage(str);
     }
@@ -32,8 +37,7 @@ function MainContainer() {
                     console.log(res.data);
                     callback(res.data);
                 })
-        }, []
-    );
+        }, []);
     let tokenId = sessionStorage.getItem("tokenId");
     const [isLogin, setIsLogin] = useState(false);
 
@@ -48,6 +52,18 @@ function MainContainer() {
             console.log("isLogin ?? :: ", isLogin);
         }
     });
+
+    // 회사 정보를 불러오는 useEffect Hook!
+    useEffect(() => {
+        axios.get("https://raw.githubusercontent.com/klmhyeonwoo/-findyourfuturecompany/develop/companyInfo/news.json", {
+        })
+            .then((res) => {
+                setCompany(() => {
+                    return res.data;
+                })
+            });
+    }, [])
+
     const [search, setSearch] = useState('');
 
     const styleInfo = {
@@ -56,7 +72,7 @@ function MainContainer() {
 
     const jlink = (link, e) => {
         console.log(link);
-    
+
         if (link != null) {
             const jobKorea = "https://www.jobkorea.co.kr" + link;
             window.open(jobKorea);
@@ -66,7 +82,7 @@ function MainContainer() {
     }
 
     const items = news.Information.filter((data) => {
-        if (search == "") {
+        if (search === "") {
             return null
         }
         else if (data.name.toLowerCase().includes(search.toLowerCase()) || data.name.toLowerCase().includes(search.toLowerCase())) {
@@ -74,9 +90,13 @@ function MainContainer() {
         }
     }).map((data, key) => {
         return (
-        <ItemBox name={data.name} state={data.state} content={data.content} position={data.position} plan={data.plan} link={data.link}/>
+            <ItemBox name={data.name} state={data.state} content={data.content} position={data.position} plan={data.plan} link={data.link} />
         )
     })
+
+    const searchCompany = (event) => {
+        setUser(event.target.value);
+    }
 
 
     return (
@@ -96,26 +116,40 @@ function MainContainer() {
                 </button>
             </div>
 
+            <br />
+            {/* 현우 작업환경 */}
+            <div className="serach_input">
+                <input type="text" placeholder="회사를 입력하세요" value={user} onChange={searchCompany} />
+                <div>
+                    {
+                        // 객체로 돌면서 useState에 저장을 시켜줘도 되고, 아니면 뷰단에서 바로 보여줘도 됩니당
+                        console.log(Object.entries(company).map((item) => {
+                            console.log(item);
+                        })
+                        )}
+                </div>
+                <button className="search_submit">
+                    <i className="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
+
             {items}
 
         </div>
-
     )
-
-
 
     function ItemBox(props) {
         return (
-            <div className="MainBox" onClick={(e) => {jlink(props.link)}}>
-                <div className  ="MainName">
+            <div className="MainBox" onClick={(e) => { jlink(props.link) }}>
+                <div className="MainName">
                     <span>{props.name}</span>
-                    <br/>
+                    <br />
                     <span>{props.state}</span>
-                    <br/>
+                    <br />
                     <span>{props.content}</span>
-                    <br/>
+                    <br />
                     <span>{props.position}</span>
-                    <br/>
+                    <br />
                     <span>{props.plan}</span>
                 </div>
             </div>
