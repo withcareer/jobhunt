@@ -72,5 +72,5 @@ jobs:
     - name: Push
       uses: ad-m/github-push-action@master
       with:
-        branch: 'develop'
+        branch: 'main'
         github_token: ${{ secrets.TOKEN }}
