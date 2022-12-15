@@ -18,7 +18,7 @@ chrome_options.add_argument('--window-size=1920x1080')
 driver = webdriver.Chrome('C:/chromedriver_win32/chromedriver.exe', chrome_options=chrome_options) # 드라이버 설정
 driver.implicitly_wait(3)
 driver.get('https://www.jobkorea.co.kr/starter/calendar') #이동할 사이트 주소
-BASE_DIR = os.path.dirname('C:/Users/for/Desktop/minwoofile/JOB_HUNGTING/jobhunting/jobhunt/devTest/src/main/test_dev/src/js')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 
@@ -77,7 +77,7 @@ infolst5 = driver.find_elements(By.CSS_SELECTOR,'#container > div.stContainer > 
 infolst5 = infolst5 + driver.find_elements(By.CSS_SELECTOR,'#container > div.stContainer > div.calContent > div.starNowMonth > table > tbody > tr:nth-child(5) > td > div > div > div > span.moreNum')
 infolst5 = infolst5 + driver.find_elements(By.CSS_SELECTOR,'#container > div.stContainer > div.calContent > div.starNowMonth > table > tbody > tr:nth-child(5) > td.saturday > div > div > div > span.moreNum')
 
-infolst = infolst1 + infolst2 + infolst3 + infolst4 + infolst5
+infolst = infolst1 
 
 for data in infolst:
     if (processing(data) != None):
