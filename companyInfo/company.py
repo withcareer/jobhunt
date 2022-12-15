@@ -15,14 +15,12 @@ chrome_options.add_argument('--disable-dev-shm-usage')
 chrome_options.add_argument('--disable-gpu')
 chrome_options.add_argument('--window-size=1920x1080')
 
-driver = webdriver.Chrome('C:/chromedriver_win32/chromedriver.exe', chrome_options=chrome_options) # 드라이버 설정
+driver = webdriver.Chrome('chromedriver', chrome_options=chrome_options)
 driver.implicitly_wait(3)
-driver.get('https://www.jobkorea.co.kr/starter/calendar') #이동할 사이트 주소
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-
+driver.get('https://www.jobkorea.co.kr/starter/calendar')
 
 parsing_data = {}
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def processing(data):
     try:
