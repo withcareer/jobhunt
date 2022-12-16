@@ -12,6 +12,16 @@ public class User {
     private String sex;
     private String pro_img;
 
+    private int expireCheck;
+
+    public int getExpireCheck() {
+        return expireCheck;
+    }
+
+    public void setExpireCheck(int expireCheck) {
+        this.expireCheck = expireCheck;
+    }
+
     private String updatepass;
     private String updatepass2;
 

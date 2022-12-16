@@ -4,12 +4,17 @@ import com.devtest.devtest.model.User;
 import com.devtest.devtest.service.LoginService;
 import com.devtest.devtest.service.SecurityService;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,17 +36,19 @@ public class UserController {
 
 
         User loginUser = loginService.getUser(params.getEmail());
-
-        String token=securityService.createToken(params.getEmail(), 1000*60*60);
         Map<String,Object> map =new HashMap<>();
+        int time = (int) ((new Date().getTime() + 60*60*1000)/1000);
         map.put("Email", params.getEmail());
-        map.put("token", token);
+        map.put("exp", time);
+
+        String token=securityService.createToken(map.toString(), 1000*10);
 
         if(loginUser == null){
             return null;
         }
         //로그인 성공시
         else if(params.getPass().equals(loginUser.getPass())){
+            System.out.println(token);
             return token;
         }
 
@@ -131,13 +138,17 @@ public class UserController {
     @CrossOrigin(origins = "http://localhost:3000")
     public User getAuthInfo(HttpServletRequest req) {
         String authorization = req.getHeader("Authorization");
-        String email=securityService.getSubject(authorization);
+        String payload = securityService.getSubject(authorization);
 
+        JSONObject json = new JSONObject(payload.replaceAll("=", ":"));
+
+        String email = json.getString("Email");
         System.out.println(email);
         System.out.println(authorization);
 
         User user=loginService.getUser(email);
         System.out.println(user.getPass());
+
         return user;
     }
 
