@@ -4,12 +4,12 @@ from io import BytesIO
 from bs4 import BeautifulSoup
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+import requests
 import json
 import os
 
-
 chrome_options = webdriver.ChromeOptions()
-chrome_options.add_argument('--headless')               # headless 내부에 뜨지않고 내부적으로 실행하겠다
+chrome_options.add_argument('--headless')               # headless
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument('--disable-dev-shm-usage')
 chrome_options.add_argument('--disable-gpu')
@@ -75,7 +75,7 @@ infolst5 = driver.find_elements(By.CSS_SELECTOR,'#container > div.stContainer > 
 infolst5 = infolst5 + driver.find_elements(By.CSS_SELECTOR,'#container > div.stContainer > div.calContent > div.starNowMonth > table > tbody > tr:nth-child(5) > td > div > div > div > span.moreNum')
 infolst5 = infolst5 + driver.find_elements(By.CSS_SELECTOR,'#container > div.stContainer > div.calContent > div.starNowMonth > table > tbody > tr:nth-child(5) > td.saturday > div > div > div > span.moreNum')
 
-infolst = infolst1 
+infolst = infolst1 + infolst2 + infolst3 + infolst4 + infolst5
 
 for data in infolst:
     if (processing(data) != None):
