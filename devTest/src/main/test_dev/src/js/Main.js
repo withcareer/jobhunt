@@ -4,6 +4,7 @@ import Header from './Form/Header';
 import axios from "axios";
 // import news from "./json/news.json"
 import "./Main.css";
+import Swal from "sweetalert2";
 
 function Main() {
     return (
@@ -18,6 +19,9 @@ function Main() {
 }
 
 // console.log(news);
+
+const ID = sessionStorage.getItem("tokenId")
+console.log(ID);
 
 function MainContainer() {
     const [message, setMessage] = useState('');
@@ -44,23 +48,39 @@ function MainContainer() {
             })
             .then((res) => {
                 console.log(res.data);
-                // setCh(res.data)
-                // console.log(ch);
+
                 if (res.data == true) {
                     console.log(res.data);
-                    // console.log(ch);
-                    alert("환영합니다!")
-                    // console.log("headers");
-                    // sessionStorage.clear()
-                    // window.location.href = "/";
+
                 } else if (res.data == false) {
                     console.log(res.data);
-                    // console.log(ch);
-                    alert("로그인 유효시간 종료!")
-                    // console.log("headers");
+
                     sessionStorage.clear()
                     window.location.href = "/";
-                    // setCh(null)
+
+                    Swal.fire({
+                        title: '로그인 유효시간 종료!',
+                        text: '로그인 페이지로 이동하시겠습니까?',
+                        icon: 'warning',
+                        
+                        showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
+                        confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
+                        cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
+                        confirmButtonText: '승인', // confirm 버튼 텍스트 지정
+                        cancelButtonText: '취소', // cancel 버튼 텍스트 지정
+                        
+                        reverseButtons: true, // 버튼 순서 거꾸로
+                        
+                     }).then(result => {
+                        // 만약 Promise리턴을 받으면,
+                        if (result.isConfirmed) { // 만약 모달창에서 confirm 버튼을 눌렀다면
+                        
+                           window.location.href = "/login";
+                        }
+                     });
+
+                    
+
                 } else if (res.data == "noLogin") { console.log("noLogin"); }
             })
     }
@@ -130,6 +150,48 @@ function MainContainer() {
         setUser(event.target.value);
     }
 
+    const bookmark = (e, companyname, plan, img) => {
+        if (ID == null) {
+            Swal.fire({
+                title: '즐겨찾기 기능은 로그인 후 가능합니다!',
+                text: '로그인 페이지로 이동하겠습니까?',
+                icon: 'warning',
+                
+                showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
+                confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
+                cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
+                confirmButtonText: '승인', // confirm 버튼 텍스트 지정
+                cancelButtonText: '취소', // cancel 버튼 텍스트 지정
+                
+                reverseButtons: true, // 버튼 순서 거꾸로
+                
+             }).then(result => {
+                // 만약 Promise리턴을 받으면,
+                if (result.isConfirmed) { // 만약 모달창에서 confirm 버튼을 눌렀다면
+                
+                    window.location.href = "/login";
+                }
+             });
+        }
+        if (ID != null) {
+            var start, end
+
+            start = plan.split('~')[0]
+            end = plan.split('~')[1]
+
+            console.log(ID, companyname, start, end, img);
+
+            axios
+            .post("/company-save", {
+                uno: ID,
+                companyname: companyname,
+                img: img,
+                start: start,
+                end: end,
+            })
+        }
+
+    }
 
     return (
         <div className="banner_box">
@@ -157,32 +219,11 @@ function MainContainer() {
         </div>
     )
 
-    // function ItemBox(props) {
-    //     return (
-    //         <div className="MainBox" onClick={(e) => { jlink(props.link) }}>
-    //             <div className="MainName">
-    //                 <div className="MainImg"><img src={props.img} alt="Blob URL Image" width={124} height={114}></img></div>
-    //                 <div className="Maintxt">
-    //                     <span>{props.name}</span>
-    //                     <br />
-    //                     <span>{props.state}</span>
-    //                     <br />
-    //                     <span>{props.content}</span>
-    //                     <br />
-    //                     <span>{props.position}</span>
-    //                     <br />
-    //                     <span>{props.plan}</span>
-    //                 </div>
-    //             </div>
-    //         </div>
-    //     )
-    // }
-
     function ItemBox(props) {
         return (
-            <div class="container" onClick={(e) => { jlink(props.link) }}>
+            <div class="container">
                 <div class="card u-clearfix">
-                    <div class="card-media">
+                    <div class="card-media" onClick={(e) => { jlink(props.link) }}>
                         <img src={props.img} alt="" class="card-media-img" />
                     </div>
 
@@ -190,7 +231,7 @@ function MainContainer() {
                         <h2 class="card-body-heading">{props.name}</h2>
                         <div class="card-body-options">
                             <div class="card-body-option card-body-option-favorite">
-                                <svg fill="#9C948A" height="26" viewBox="0 0 24 24" width="26" xmlns="http://www.w3.org/2000/svg">
+                                <svg fill="#9C948A" height="26" viewBox="0 0 24 24" width="26" xmlns="http://www.w3.org/2000/svg" onClick={(e) => { bookmark(e, props.name, props.plan, props.img) }}>
                                     <path d="M0 0h24v24H0z" fill="none" />
                                     <path d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z" />
                                 </svg>
@@ -204,8 +245,6 @@ function MainContainer() {
                         </div>
                         <br />
                         <div class="card-button card-button-link">
-                            <span>{props.name}</span>
-                            <br />
                             <span>{props.state}</span>
                             <br />
                             <span>{props.content}</span>
