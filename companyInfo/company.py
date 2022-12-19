@@ -43,15 +43,22 @@ def processing(data):
             position = position.get_text().strip()
             plan = plan.get_text().strip()
 
+            driver2.get('https://www.jobkorea.co.kr'+link)
+            sleep(2)
+            companyimg=driver2.find_element(By.CSS_SELECTOR, ".width").get_attribute("src")
+            
+
             #if state == "시작" or state == "예상":
-            print(state, name, content, position, plan, link)
+            print(state, name, content, position, plan, link ,companyimg)
             parsing_data[name] = {
                 "state" : state,
                 "content" : content,
                 "position" : position,
                 "plan" : plan,
                 "link" : link,
+                "img" :companyimg
             }
+
 
         driver.find_element(By.CSS_SELECTOR,'button.closeCalLy').click()
 
