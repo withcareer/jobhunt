@@ -41,7 +41,7 @@ public class UserController {
         map.put("Email", params.getEmail());
         map.put("exp", time);
 
-        String token=securityService.createToken(map.toString(), 1000*10);
+        String token=securityService.createToken(map.toString(), 1000*60*60);
 
         if(loginUser == null){
             return null;
