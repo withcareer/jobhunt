@@ -1,6 +1,8 @@
 package com.devtest.devtest.controller;
 
+import com.devtest.devtest.model.HUNTUSER_BOOKMARK;
 import com.devtest.devtest.model.User;
+import com.devtest.devtest.model.User_HUNTUSER_BOOKMARK;
 import com.devtest.devtest.service.LoginService;
 import com.devtest.devtest.service.SecurityService;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -132,25 +132,67 @@ public class UserController {
         }
     }
 
-
-
     @RequestMapping(value = "/mypage", method = RequestMethod.GET)
     @CrossOrigin(origins = "http://localhost:3000")
-    public User getAuthInfo(HttpServletRequest req) {
+    public List getAuthInfo(HttpServletRequest req) {
         String authorization = req.getHeader("Authorization");
         String payload = securityService.getSubject(authorization);
 
         JSONObject json = new JSONObject(payload.replaceAll("=", ":"));
 
         String email = json.getString("Email");
-        System.out.println(email);
+
+        User user = loginService.getUser(email);
+
+        List<User> userList = loginService.getUserList(email);
+
+        List<HUNTUSER_BOOKMARK> huntuser_bookmark = loginService.get_HUNTUSER_BOOKMARK(user.getUno());
+
+        List mine = new ArrayList<>();
+
+        mine.addAll(userList);
+        mine.addAll(huntuser_bookmark);
+
+        System.out.println(mine);
+
+//        User_HUNTUSER_BOOKMARK user_huntuser_bookmark = new User_HUNTUSER_BOOKMARK(); //빈 dto
+
+        return mine;
+    }
+
+    @RequestMapping(value = "/company-save", method = RequestMethod.POST)
+    @CrossOrigin(origins = "http://localhost:3000")
+    public int company_save(@RequestBody final HUNTUSER_BOOKMARK params ,HttpServletRequest req) {
+
+        // 토큰값으로 해당하는 유저의 정보를 가져오는 코드
+        String authorization = req.getHeader("Authorization");
         System.out.println(authorization);
+        String payload = securityService.getSubject(authorization);
+
+        JSONObject json = new JSONObject(payload.replaceAll("=", ":"));
+
+        String email = json.getString("Email");
 
         User user=loginService.getUser(email);
-        System.out.println(user.getPass());
 
-        return user;
+        params.setUno(user.getUno());
+
+        System.out.println(params.getCompanyname());
+        System.out.println(params.getCompany_start());
+        System.out.println(params.getCompany_end());
+        System.out.println(params.getCompanyimg());
+        System.out.println(params.getUno());
+
+        if(this.loginService.Insert_User_BookMark(params) != 0){
+            return 1;
+        }
+
+        else {
+            return 2;
+        }
+
     }
+
 
 
 

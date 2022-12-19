@@ -9,6 +9,12 @@
         WHERE   email = #{email}
     </select>
 
+    <select id="getUserList" parameterType="String" resultType="User">
+        SELECT   *
+        FROM    huntuser
+        WHERE   email = #{email}
+    </select>
+
     <select id="getNickname" parameterType="String" resultType="User">
         SELECT   *
         FROM    huntuser
@@ -23,5 +29,20 @@
         INSERT INTO huntuser (uno, email, pass, nickname, sex, birth, phone)
         VALUES (#{uno}, #{email}, #{pass}, #{nickname}, #{sex}, #{birth}, #{phone})
     </insert>
+
+    <insert id="Insert_User_BookMark" keyProperty="user_bookmark_num">
+        <selectKey keyProperty="user_bookmark_num" resultType="int" order="BEFORE">
+            SELECT COALESCE(MAX(user_bookmark_num), 0) + 1 AS user_bookmark_num
+            FROM   HUNTUSER_BOOKMARK
+        </selectKey>
+        INSERT INTO HUNTUSER_BOOKMARK (user_bookmark_num, uno, companyname, companyimg, company_start, company_end, company_link)
+        VALUES (#{user_bookmark_num}, #{uno}, #{companyname}, #{companyimg}, #{company_start}, #{company_end}, #{company_link})
+    </insert>
+
+    <select id="get_HUNTUSER_BOOKMARK" parameterType="int" resultType="HUNTUSER_BOOKMARK">
+        SELECT   *
+        FROM    HUNTUSER_BOOKMARK
+        WHERE   uno = #{uno}
+    </select>
 
 </mapper>
