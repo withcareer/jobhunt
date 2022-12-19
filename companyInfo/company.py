@@ -4,7 +4,6 @@ from io import BytesIO
 from bs4 import BeautifulSoup
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-import requests
 import json
 import os
 
@@ -17,6 +16,8 @@ chrome_options.add_argument('--window-size=1920x1080')
 
 driver = webdriver.Chrome('chromedriver', chrome_options=chrome_options)
 driver.implicitly_wait(3)
+driver2 = webdriver.Chrome('chromedriver', chrome_options=chrome_options)
+driver.implicitly_wait(3)
 driver.get('https://www.jobkorea.co.kr/starter/calendar')
 
 parsing_data = {}
@@ -25,16 +26,18 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 def processing(data):
     try:
         data.click()
-        sleep(1)
+        sleep(2)
+        
         html = driver.page_source
         soup = BeautifulSoup(html, 'html.parser')
+        
         companyLink = soup.select('div.co > div.coTit > a.coLink')
         companyState = soup.select('div.co > div.coTit > a.coLink > span > strong:nth-child(1)')
         companyName = soup.select('div.co > div.coTit > a.coLink > span')
         companyContent = soup.select('div.info > div.tit > a.link > span')
         companyPosition = soup.select('div.sDesc > strong')
         companyPlan = soup.select('div.side > span.day')
-
+        
         for link, name, state, content, position, plan in zip(companyLink, companyName, companyState, companyContent, companyPosition, companyPlan):
             state = state.get_text().strip()
             link = link.get('href')
@@ -42,7 +45,7 @@ def processing(data):
             content = content.get_text().strip()
             position = position.get_text().strip()
             plan = plan.get_text().strip()
-
+            
             driver2.get('https://www.jobkorea.co.kr'+link)
             sleep(2)
             companyimg=driver2.find_element(By.CSS_SELECTOR, ".width").get_attribute("src")
@@ -59,11 +62,10 @@ def processing(data):
                 "img" :companyimg
             }
 
-
         driver.find_element(By.CSS_SELECTOR,'button.closeCalLy').click()
 
     except Exception as e:
-        print(e)
+        # print(e)
         return None
 
 infolst1 = driver.find_elements(By.CSS_SELECTOR,'#container > div.stContainer > div.calContent > div.starNowMonth > table > tbody > tr:nth-child(1) > td.sunday > div > div > div > span.moreNum')
@@ -86,7 +88,8 @@ infolst = infolst1 + infolst2 + infolst3 + infolst4 + infolst5
 
 for data in infolst:
     if (processing(data) != None):
-        print(processing(data))
+        pass
+        # print(processing(data))
 driver.quit()
 
 
