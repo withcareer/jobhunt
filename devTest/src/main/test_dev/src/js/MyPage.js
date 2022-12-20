@@ -77,6 +77,10 @@ const bookmark = (e, companyname, plan, img, link) => {
           }
       });
   }
+
+
+
+
   if (ID != null) {
       var start, end
 
@@ -95,7 +99,50 @@ const bookmark = (e, companyname, plan, img, link) => {
                   company_link: link
 
               },{headers: {Authorization: `${sessionStorage.getItem("tokenId")}`}}
-              )
+              ).then(result => {
+                
+                console.log(result);
+            });
+  }
+
+}
+
+const delete_bookmark= (e, companyname) => {
+  if (ID != null) {
+      Swal.fire({
+          title: '즐겨찾기 삭제를 하시겠습니까?',
+
+          icon: 'warning',
+
+          showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
+          confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
+          cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
+          confirmButtonText: '승인', // confirm 버튼 텍스트 지정
+          cancelButtonText: '취소', // cancel 버튼 텍스트 지정
+
+          reverseButtons: true, // 버튼 순서 거꾸로
+
+      }).then(result => {
+          // 만약 Promise리턴을 받으면,
+          if (result.isConfirmed) { // 만약 모달창에서 confirm 버튼을 눌렀다면
+
+            axios
+            .post("/company-delete",
+                {
+                    companyname: companyname
+  
+                },{headers: {Authorization: `${sessionStorage.getItem("tokenId")}`}}
+                ).then(result=>{
+
+                    if(result.data==1){
+                      window.location.reload();
+                    }
+                    else{
+                      console.log("삭제실패");
+                    }
+                })
+          }
+      });
   }
 
 }
@@ -145,6 +192,7 @@ const bookmark = (e, companyname, plan, img, link) => {
                 <div class="card-media" onClick={(e) => { jlink(props.link) }}>
                     <img src={props.img} alt="" class="card-media-img" />
                 </div>
+                <img src="img/delete.png" class="delete-img" width="10px" onClick={(e) => { delete_bookmark(e,props.name) }}></img>
 
                 <div class="card-body">
                     <h2 class="card-body-heading">{props.name}</h2>
@@ -172,8 +220,8 @@ const bookmark = (e, companyname, plan, img, link) => {
         </div>
     )
 }
-
-
 }
+
+
 
 export default MyPage;

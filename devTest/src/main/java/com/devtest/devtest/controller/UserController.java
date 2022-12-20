@@ -30,36 +30,38 @@ public class UserController {
     @Autowired
     private SecurityService securityService;
 
+
+    //로긴
     @RequestMapping(value = "/login")
     @CrossOrigin(origins = "http://localhost:3000")
     public String login2(@RequestBody final User params) {
 
 
         User loginUser = loginService.getUser(params.getEmail());
-        Map<String,Object> map =new HashMap<>();
-        int time = (int) ((new Date().getTime() + 60*60*1000)/1000);
+        Map<String, Object> map = new HashMap<>();
+        int time = (int) ((new Date().getTime() + 60 * 60 * 1000) / 1000);
         map.put("Email", params.getEmail());
         map.put("exp", time);
 
-        String token=securityService.createToken(map.toString(), 1000*60*60);
+        String token = securityService.createToken(map.toString(), 1000 * 60 * 60);
 
-        if(loginUser == null){
+        if (loginUser == null) {
             return null;
         }
         //로그인 성공시
-        else if(params.getPass().equals(loginUser.getPass())){
+        else if (params.getPass().equals(loginUser.getPass())) {
             System.out.println(token);
             return token;
-        }
-
-        else {
+        } else {
             return null;
         }
     }
 
+
+    //아이디 중복찾기
     @RequestMapping(value = "/idCheck", method = RequestMethod.POST)//ID중복체크
     @CrossOrigin(origins = "http://localhost:3000")
-    public int idCheck(@RequestBody final User params){
+    public int idCheck(@RequestBody final User params) {
 
         String userId = params.getEmail();
 
@@ -67,19 +69,20 @@ public class UserController {
 
 //        System.out.println(loginUser.getNickname());
 
-        if(joinUser != null){ //읽어온 유저 정보가 있으면 패일
+        if (joinUser != null) { //읽어온 유저 정보가 있으면 패일
 
             return 0;
-        }
-        else {
+        } else {
 
             return 1;
         }
     }
 
+
+    //아이디 중복체크
     @RequestMapping(value = "/nickname", method = RequestMethod.POST)//ID중복체크
     @CrossOrigin(origins = "http://localhost:3000")
-    public int nickCheck(@RequestBody final User params){
+    public int nickCheck(@RequestBody final User params) {
 
         String userNickname = params.getNickname();
 
@@ -87,51 +90,43 @@ public class UserController {
 
         User joinUser = this.loginService.getNickname(userNickname);
 
-        if(joinUser != null){ //읽어온 유저 정보가 있으면 패일
+        if (joinUser != null) { //읽어온 유저 정보가 있으면 패일
 
             return 0;
-        }
-        else {
+        } else {
 
             return 1;
         }
     }
 
+    //패스워드 찾기
     @RequestMapping(value = "/passCheck", method = RequestMethod.POST)//PW중복체크
     @CrossOrigin(origins = "http://localhost:3000")
-    public int passCheck(@RequestBody final User params){
+    public int passCheck(@RequestBody final User params) {
 
-        if(!params.getPass().equals(params.getPass2())){ //읽어온 유저 정보가 있으면 패일
+        if (!params.getPass().equals(params.getPass2())) { //읽어온 유저 정보가 있으면 패일
 
             return 0;
-        }
-        else {
+        } else {
 
             return 1;
         }
     }
 
+    //회원가입
     @RequestMapping(value = "/join", method = RequestMethod.POST)//회원가입
     @CrossOrigin(origins = "http://localhost:3000")
-    public int join(@RequestBody final User params){
+    public int join(@RequestBody final User params) {
 
-        System.out.println(params.getEmail());
-        System.out.println(params.getPass());
-        System.out.println(params.getPass2());
-        System.out.println(params.getNickname());
-        System.out.println(params.getSex());
-        System.out.println(params.getBirth());
-        System.out.println(params.getPhone());
 
-        if(this.loginService.insertUser(params) != 0){
+        if (this.loginService.insertUser(params) != 0) {
             return 1;
-        }
-
-        else {
+        } else {
             return 2;
         }
     }
 
+    // 마이페이지 정보출력
     @RequestMapping(value = "/mypage", method = RequestMethod.GET)
     @CrossOrigin(origins = "http://localhost:3000")
     public List getAuthInfo(HttpServletRequest req) {
@@ -160,9 +155,12 @@ public class UserController {
         return mine;
     }
 
+
+    // 즐겨찾기에 회사정보저장
     @RequestMapping(value = "/company-save", method = RequestMethod.POST)
     @CrossOrigin(origins = "http://localhost:3000")
-    public int company_save(@RequestBody final HUNTUSER_BOOKMARK params ,HttpServletRequest req) {
+    public int company_save(@RequestBody final HUNTUSER_BOOKMARK params, HttpServletRequest req) {
+
 
         // 토큰값으로 해당하는 유저의 정보를 가져오는 코드
         String authorization = req.getHeader("Authorization");
@@ -173,7 +171,7 @@ public class UserController {
 
         String email = json.getString("Email");
 
-        User user=loginService.getUser(email);
+        User user = loginService.getUser(email);
 
         params.setUno(user.getUno());
 
@@ -183,16 +181,45 @@ public class UserController {
         System.out.println(params.getCompanyimg());
         System.out.println(params.getUno());
 
-        if(this.loginService.Insert_User_BookMark(params) != 0){
-            return 1;
-        }
 
-        else {
-            return 2;
+
+        if (this.loginService.get_HUNTUSER_BOOKMARK_Check(params.getCompanyname(),user.getUno())==null) {
+            if(this.loginService.Insert_User_BookMark(params) != 0){
+                return 1; // 즐겨찾기에 성공
+            }else{
+                return 3; // 로그인 후 이용해주세요
+            }
+
+        }else {
+            return 2;  //이미 즐겨찾기가 되어있습니다.
         }
 
     }
 
+    // 즐겨찾기에 회사정보삭제
+    @RequestMapping(value = "/company-delete", method = RequestMethod.POST)
+    @CrossOrigin(origins = "http://localhost:3000")
+    public int company_delete(@RequestBody final HUNTUSER_BOOKMARK params, HttpServletRequest req) {
+
+        // 토큰값으로 해당하는 유저의 정보를 가져오는 코드
+        String authorization = req.getHeader("Authorization");
+        System.out.println(authorization);
+        String payload = securityService.getSubject(authorization);
+
+        JSONObject json = new JSONObject(payload.replaceAll("=", ":"));
+
+        String email = json.getString("Email");
+
+        User user = loginService.getUser(email);
+
+
+
+        if (this.loginService.delete_User_BookMark(params.getCompanyname(),user.getUno()) != 0) {
+            return 1;
+        } else {
+            return 2;
+        }
+    }
 
 
 

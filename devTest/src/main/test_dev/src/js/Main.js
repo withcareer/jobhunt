@@ -191,7 +191,29 @@ function MainContainer() {
                         company_link: link
 
                     },{headers: {Authorization: `${sessionStorage.getItem("tokenId")}`}}
-                    )
+                    ).then(result => {
+                        if(result.data==1){
+                            Swal.fire({
+                                icon: 'success',
+                                title: '즐겨찾기 Success',
+                                // timer: 100000,
+                            })
+                        }else if(result.data==2){
+                            Swal.fire({
+                                icon: 'error',
+                                title: '이미 즐겨찾기가 되어있습니다.',
+                                // timer: 100000,
+                            })
+                        }else{
+                            Swal.fire({
+                                icon: 'error',
+                                title: '로그인 후 이용해주세요',
+                                // timer: 100000,
+                            })
+                        }
+                        
+
+                    });
         }
 
     }

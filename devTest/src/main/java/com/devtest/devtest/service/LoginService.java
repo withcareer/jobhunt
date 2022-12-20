@@ -18,4 +18,8 @@ public interface LoginService {
 
     List<HUNTUSER_BOOKMARK> get_HUNTUSER_BOOKMARK(int uno);
 
+    int delete_User_BookMark(String companyname,int uno);
+
+    Integer get_HUNTUSER_BOOKMARK_Check(String companyname,int uno);
+
 }

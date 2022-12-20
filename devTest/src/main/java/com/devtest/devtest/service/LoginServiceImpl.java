@@ -41,6 +41,16 @@ public class LoginServiceImpl implements LoginService{
     }
 
     @Override
+    public int delete_User_BookMark(String companyname, int uno) {
+        return loginMapper.delete_User_BookMark(companyname,uno);
+    }
+
+    @Override
+    public Integer get_HUNTUSER_BOOKMARK_Check(String companyname, int uno) {
+        return this.loginMapper.get_HUNTUSER_BOOKMARK_Check(companyname, uno);
+    }
+
+    @Override
     public List<User> getUserList(String email) {
         return loginMapper.getUserList(email);
     }

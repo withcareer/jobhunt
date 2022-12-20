@@ -45,4 +45,17 @@
         WHERE   uno = #{uno}
     </select>
 
+    <delete id="delete_User_BookMark">
+
+        delete
+        from HUNTUSER_BOOKMARK
+        where uno= #{uno} and companyname= #{companyname}
+    </delete>
+
+    <select id="get_HUNTUSER_BOOKMARK_Check" resultType="Integer">
+        SELECT   *
+        FROM    HUNTUSER_BOOKMARK
+        WHERE   uno= #{uno} and companyname= #{companyname}
+    </select>
+
 </mapper>
