@@ -73,11 +73,7 @@ function Login() {
                             // timer: 100000,
                         }).then((q) => {
                             if (q.isConfirmed) {
-                                // axios.get("/mypage", {
-                                //     headers: {
-                                //         Authorization: `Bearer ${sessionStorage.getItem("tokenId")}`
-                                //     }
-                                // })
+
                                 document.location.href = "/";
 
                             }

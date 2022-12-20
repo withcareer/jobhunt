@@ -1,7 +1,6 @@
 package com.devtest.devtest.model;
 
-public class User {
-    int uno;
+public class User_HUNTUSER_BOOKMARK {
 
     private String email;
     private String pass;
@@ -11,26 +10,60 @@ public class User {
     private String phone;
     private String sex;
     private String pro_img;
-
     private int expireCheck;
+    int user_bookmark_num;
+    int uno;
+    String companyname;
+    String companyimg;
+    String company_start;
+    String company_end;
+    String company_link;
 
-    public int getExpireCheck() {
-        return expireCheck;
+    public String getCompany_link() {
+        return company_link;
     }
 
-    public void setExpireCheck(int expireCheck) {
-        this.expireCheck = expireCheck;
+    public void setCompany_link(String company_link) {
+        this.company_link = company_link;
     }
-
-    private String updatepass;
-    private String updatepass2;
-
     public int getUno() {
         return uno;
     }
 
     public void setUno(int uno) {
         this.uno = uno;
+    }
+
+    public String getCompanyname() {
+        return companyname;
+    }
+
+    public void setCompanyname(String companyname) {
+        this.companyname = companyname;
+    }
+
+    public String getCompanyimg() {
+        return companyimg;
+    }
+
+    public void setCompanyimg(String companyimg) {
+        this.companyimg = companyimg;
+    }
+
+    public String getCompany_start() {
+        return company_start;
+    }
+
+    public void setCompany_start(String company_start) {
+        this.company_start = company_start;
+    }
+
+    public String getCompany_end() {
+        return company_end;
+    }
+
+    public void setCompany_end(String company_end) {
+        this.company_end = company_end;
     }
 
     public String getEmail() {
@@ -97,19 +130,19 @@ public class User {
         this.pro_img = pro_img;
     }
 
-    public String getUpdatepass() {
-        return updatepass;
+    public int getExpireCheck() {
+        return expireCheck;
     }
 
-    public void setUpdatepass(String updatepass) {
-        this.updatepass = updatepass;
+    public void setExpireCheck(int expireCheck) {
+        this.expireCheck = expireCheck;
     }
 
-    public String getUpdatepass2() {
-        return updatepass2;
+    public int getUser_bookmark_num() {
+        return user_bookmark_num;
     }
 
-    public void setUpdatepass2(String updatepass2) {
-        this.updatepass2 = updatepass2;
+    public void setUser_bookmark_num(int user_bookmark_num) {
+        this.user_bookmark_num = user_bookmark_num;
     }
 }
