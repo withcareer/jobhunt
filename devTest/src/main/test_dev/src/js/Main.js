@@ -64,6 +64,7 @@ function MainContainer() {
 
                 // } 
                 if (res.data[0] == 'false') {
+                    sessionStorage.removeItem("tokenId")
                     console.log(res.data);
                     axios.get("/refresh", {
                         headers: {

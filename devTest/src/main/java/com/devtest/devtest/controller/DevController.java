@@ -11,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -40,14 +37,15 @@ public class DevController {
         }else {
             try{
                 String payload = securityService.getSubject(authorization);
+//                System.out.println(payload);
 
                 JSONObject json = new JSONObject(payload.replaceAll("=", ":"));
                 System.out.println(json);
 
                 int exp = json.getInt("exp");
                 String email = json.getString("Email");
-                System.out.println(exp);
-                System.out.println(email);
+//                System.out.println(exp);
+//                System.out.println(email);
                 List bookmarkList = loginService.BookMark_Check(email);
 
                 expireCheck = securityService.jwtExpireCheck(exp);
@@ -70,19 +68,23 @@ public class DevController {
         System.out.println("refreshTokenId : " + refreshTokenId);
 
             try{
-                String payload = securityService.getSubject(refreshTokenId);
+                String refreshPayload = securityService.getSubject(refreshTokenId);
 
-                JSONObject json = new JSONObject(payload.replaceAll("=", ":"));
-//                System.out.println(json);
+                JSONObject refreshJson = new JSONObject(refreshPayload.replaceAll("=", ":"));
+//                System.out.println(refreshJ);
 
-                int exp = json.getInt("exp");
-                String email = json.getString("Email");
-                System.out.println(exp);
+                int exp = refreshJson.getInt("exp");
+                String email = refreshJson.getString("Email");
+//                System.out.println(exp);
 
                 expireCheck = securityService.jwtExpireCheck(exp);
 
                 if (expireCheck == "true"){
-                    String reToken = securityService.createToken(email, 10000 * 6);
+                    Map<String, Object> token_map = new HashMap<>();
+                    int time = (int) ((new Date().getTime() + 60 * 60 * 1000) / 1000);
+                    token_map.put("Email", email);
+                    token_map.put("exp", time);
+                    String reToken = securityService.createToken(token_map.toString(), 10000 * 6);
                     return reToken;
                 }
 
