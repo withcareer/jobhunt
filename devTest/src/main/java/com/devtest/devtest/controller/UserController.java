@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,19 +39,22 @@ public class UserController {
 
 
         User loginUser = loginService.getUser(params.getEmail());
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> token_map = new HashMap<>();
+        Map<String, Object> refresh_map = new HashMap<>();
         int time = (int) ((new Date().getTime() + 60 * 60 * 1000) / 1000);
-        map.put("Email", params.getEmail());
-        map.put("exp", time);
+        token_map.put("Email", params.getEmail());
+        token_map.put("exp", time);
 
-        String token = securityService.createToken(map.toString(), 1000 * 60 * 60);
+        String token = securityService.createToken(token_map.toString(), 1000 * 60 * 60);
+        String refresh_token=securityService.createToken(refresh_map.toString(), 1000 * 60 * 60*24);
 
         if (loginUser == null) {
             return null;
         }
         //로그인 성공시
         else if (params.getPass().equals(loginUser.getPass())) {
-            System.out.println(token);
+            System.out.println("token:"+token);
+            System.out.println("refresh token:"+refresh_token);
             return token;
         } else {
             return null;
