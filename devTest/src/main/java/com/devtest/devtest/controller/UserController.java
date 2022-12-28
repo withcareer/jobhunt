@@ -44,8 +44,12 @@ public class UserController {
         int time = (int) ((new Date().getTime() + 60 * 60 * 1000) / 1000);
         token_map.put("Email", params.getEmail());
         token_map.put("exp", time);
+        refresh_map.put("exp", time);
+        refresh_map.put("Email", params.getEmail());
 
-        String token = securityService.createToken(token_map.toString(), 1000 * 60 * 60);
+
+
+        String token = securityService.createToken(token_map.toString(), 10000 * 6);
         String refresh_token=securityService.createToken(refresh_map.toString(), 1000 * 60 * 60*24);
 
         if (loginUser == null) {
@@ -55,7 +59,7 @@ public class UserController {
         else if (params.getPass().equals(loginUser.getPass())) {
             System.out.println("token:"+token);
             System.out.println("refresh token:"+refresh_token);
-            return token;
+            return token + "/" + refresh_token;
         } else {
             return null;
         }
