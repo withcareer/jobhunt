@@ -73,8 +73,9 @@ function MainContainer() {
                     }).then((res) => {
                         console.log(res.data);
                         sessionStorage.setItem("tokenId", res.data)
-                        if (res.data == 'false'){
-                            sessionStorage.clear()
+                        
+                        if (res.data == false){
+                            
 
                     
                             Swal.fire({
@@ -89,8 +90,12 @@ function MainContainer() {
                                 cancelButtonText: '취소', // cancel 버튼 텍스트 지정
         
                                 reverseButtons: true, // 버튼 순서 거꾸로
+
+                                
         
                             }).then(result => {
+
+                                sessionStorage.clear()
                                 // 만약 Promise리턴을 받으면,
                                 if (result.isConfirmed) { // 만약 모달창에서 confirm 버튼을 눌렀다면
         
@@ -306,7 +311,7 @@ function MainContainer() {
                         <h2 class="card-body-heading">{props.name}</h2>
                         <div class="card-body-options">
                             <div class="card-body-option card-body-option-favorite">
-                                <svg fill="#9C948A" height="26" viewBox="0 0 24 24" width="26" xmlns="http://www.w3.org/2000/svg" onClick={(e) => { bookmark(e, props.name, props.plan, props.img, props.link, props.bookmark) }}>
+                                <svg fill="#d12e46" height="26" viewBox="0 0 24 24" width="26" xmlns="http://www.w3.org/2000/svg" onClick={(e) => { bookmark(e, props.name, props.plan, props.img, props.link, props.bookmark) }}>
                                     <path d="M0 0h24v24H0z" fill="none" />
                                     <path d= {mark}/>
                                 </svg>

@@ -3,8 +3,12 @@ package com.devtest.devtest.controller;
 import com.devtest.devtest.model.HUNTUSER_BOOKMARK;
 import com.devtest.devtest.model.User;
 import com.devtest.devtest.model.User_HUNTUSER_BOOKMARK;
+import com.devtest.devtest.model.User_RefreshToken;
+import com.devtest.devtest.repository.RedisRepository;
 import com.devtest.devtest.service.LoginService;
 import com.devtest.devtest.service.SecurityService;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +35,9 @@ public class UserController {
     @Autowired
     private SecurityService securityService;
 
+    @Autowired
+    RedisRepository redisRepository;
+
 
     //로긴
     @RequestMapping(value = "/login")
@@ -41,24 +48,31 @@ public class UserController {
         User loginUser = loginService.getUser(params.getEmail());
         Map<String, Object> token_map = new HashMap<>();
         Map<String, Object> refresh_map = new HashMap<>();
-        int time = (int) ((new Date().getTime() + 60 * 60 * 1000) / 1000);
+        int time = (int) ((new Date().getTime() + 60 * 60 * 1000) / 1000); //시분초가 아닌 ms 값으로 변환시키는 과정
+
         token_map.put("Email", params.getEmail());
         token_map.put("exp", time);
         refresh_map.put("exp", time);
-        refresh_map.put("Email", params.getEmail());
 
 
-
-        String token = securityService.createToken(token_map.toString(), 10000 * 6);
-        String refresh_token=securityService.createToken(refresh_map.toString(), 1000 * 60 * 60*24);
+        String token = securityService.createToken(token_map.toString(), 1000 * 60); //access token값 유효시간
+        String refresh_token = securityService.createToken(refresh_map.toString(), 1000 * 60 * 60 * 24); // 1000 * 60 * 60*24 refresh토큰 유효시간
 
         if (loginUser == null) {
             return null;
         }
         //로그인 성공시
         else if (params.getPass().equals(loginUser.getPass())) {
-            System.out.println("token:"+token);
-            System.out.println("refresh token:"+refresh_token);
+            System.out.println("token:" + token);
+            System.out.println("refresh token:" + refresh_token);
+
+            // redis를 이용하여 캐시에 이메일에 해당하는 refresh 토큰값을 넣어줌
+            User_RefreshToken user = new User_RefreshToken();
+            user.setEmail(params.getEmail().toString());
+            user.setRefresh_token(refresh_token.toString());
+            redisRepository.save(user).toString();
+
+            System.out.println(redisRepository.findAll().toString());
             return token + "/" + refresh_token;
         } else {
             return null;
@@ -137,30 +151,42 @@ public class UserController {
     // 마이페이지 정보출력
     @RequestMapping(value = "/mypage", method = RequestMethod.GET)
     @CrossOrigin(origins = "http://localhost:3000")
-    public List getAuthInfo(HttpServletRequest req) {
-        String authorization = req.getHeader("Authorization");
-        String payload = securityService.getSubject(authorization);
+    public List getAuthInfo(HttpServletRequest req) throws ExpiredJwtException {
 
-        JSONObject json = new JSONObject(payload.replaceAll("=", ":"));
+        String expireCheck = null;
+        try {
+            String authorization = req.getHeader("Authorization");
+            String payload = securityService.getSubject(authorization);
 
-        String email = json.getString("Email");
+            JSONObject json = new JSONObject(payload.replaceAll("=", ":"));
 
-        User user = loginService.getUser(email);
+            String email = json.getString("Email");
 
-        List<User> userList = loginService.getUserList(email);
+            User user = loginService.getUser(email);
 
-        List<HUNTUSER_BOOKMARK> huntuser_bookmark = loginService.get_HUNTUSER_BOOKMARK(user.getUno());
+            List<User> userList = loginService.getUserList(email);
 
-        List mine = new ArrayList<>();
+            List<HUNTUSER_BOOKMARK> huntuser_bookmark = loginService.get_HUNTUSER_BOOKMARK(user.getUno());
 
-        mine.addAll(userList);
-        mine.addAll(huntuser_bookmark);
+            List mine = new ArrayList<>();
 
-        System.out.println(mine);
+            mine.addAll(userList);
+            mine.addAll(huntuser_bookmark);
 
-//        User_HUNTUSER_BOOKMARK user_huntuser_bookmark = new User_HUNTUSER_BOOKMARK(); //빈 dto
+            System.out.println(mine);
 
-        return mine;
+            return mine;
+        }catch (JwtException e){
+            System.out.println("마이페이지 토큰 만료");
+            expireCheck = "false";
+
+            e.printStackTrace();
+        }
+
+//      User_HUNTUSER_BOOKMARK user_huntuser_bookmark = new User_HUNTUSER_BOOKMARK(); //빈 dto
+        return Collections.singletonList(expireCheck);
+
+
     }
 
 
@@ -190,15 +216,14 @@ public class UserController {
         System.out.println(params.getUno());
 
 
-
-        if (this.loginService.get_HUNTUSER_BOOKMARK_Check(params.getCompanyname(),user.getUno())==null) {
-            if(this.loginService.Insert_User_BookMark(params) != 0){
+        if (this.loginService.get_HUNTUSER_BOOKMARK_Check(params.getCompanyname(), user.getUno()) == null) {
+            if (this.loginService.Insert_User_BookMark(params) != 0) {
                 return 1; // 즐겨찾기에 성공
-            }else{
+            } else {
                 return 3; // 로그인 후 이용해주세요
             }
 
-        }else {
+        } else {
             return 2;  //이미 즐겨찾기가 되어있습니다.
         }
 
@@ -221,14 +246,12 @@ public class UserController {
         User user = loginService.getUser(email);
 
 
-
-        if (this.loginService.delete_User_BookMark(params.getCompanyname(),user.getUno()) != 0) {
+        if (this.loginService.delete_User_BookMark(params.getCompanyname(), user.getUno()) != 0) {
             return 1;
         } else {
             return 2;
         }
     }
-
 
 
 }
