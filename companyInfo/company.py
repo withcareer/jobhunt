@@ -37,29 +37,44 @@ def processing(data):
         companyContent = soup.select('div.info > div.tit > a.link > span')
         companyPosition = soup.select('div.sDesc > strong')
         companyPlan = soup.select('div.side > span.day')
+        inner_link=soup.select('div.info > div.tit > a.link')
         
-        for link, name, state, content, position, plan in zip(companyLink, companyName, companyState, companyContent, companyPosition, companyPlan):
+        for link, name, state, content, position, plan , inner_link in zip(companyLink, companyName, companyState, companyContent, companyPosition, companyPlan , inner_link):
             state = state.get_text().strip()
             link = link.get('href')
             name = name.get_text().strip()[2:]
             content = content.get_text().strip()
             position = position.get_text().strip()
             plan = plan.get_text().strip()
+            in_link=inner_link.get('href')
             
-            driver2.get('https://www.jobkorea.co.kr'+link)
+            driver2.get('https://www.jobkorea.co.kr'+in_link)
             sleep(2)
-            companyimg=driver2.find_element(By.CSS_SELECTOR, ".width").get_attribute("src")
+
+            companyimg=driver2.find_element(By.CSS_SELECTOR, "#cologo").get_attribute("src")
+            start_end_day=driver2.find_element(By.CSS_SELECTOR,"dl.date").text
+            array=start_end_day.split(" ")
             
+            start_day=array[1]
+            end_day=array[3]
+   
+            
+            
+            # endday=driver2.find_element(By.CSS_SELECTOR,"dl.date > dd:nth-child(2)").text
+
 
             #if state == "시작" or state == "예상":
-            print(state, name, content, position, plan, link ,companyimg)
+            print(state, name, content, position, plan, link ,companyimg,start_day,end_day)
             parsing_data[name] = {
                 "state" : state,
                 "content" : content,
                 "position" : position,
                 "plan" : plan,
                 "link" : link,
-                "img" :companyimg
+                "img" :companyimg,
+                "시작일":start_day,
+                "종료일":end_day
+                
             }
 
         driver.find_element(By.CSS_SELECTOR,'button.closeCalLy').click()
