@@ -253,5 +253,14 @@ public class UserController {
         }
     }
 
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    @CrossOrigin(origins = "http://localhost:3000")
+    public int logout(HttpServletRequest req) {
+        String refreshTokenId = req.getHeader("refreshTokenId");
+        redisRepository.deleteById(refreshTokenId); //refresh token값 redis에서 삭제
+        System.out.println("로그아웃");
+        return 1;
+    }
+
 
 }

@@ -19,8 +19,25 @@ function Main() {
 }
 
 // console.log(news);
-let date = new Date().getMonth() + 1 + "/" + new Date().getDate()
-// console.log(date);
+
+function left(value) {
+    if (value >= 10) {
+        return value;
+    }
+
+    return `0${value}`;
+}
+
+function toStringByFormatting(source) {
+    const year = source.getFullYear();
+    const month = left(source.getMonth() + 1);
+    const day = left(source.getDate());
+
+    return [year, month, day].join(".");
+}
+
+let date = toStringByFormatting(new Date())
+console.log(date);
 
 const ID = sessionStorage.getItem("tokenId")
 const refreshTokenId = sessionStorage.getItem("refreshTokenId")
@@ -163,7 +180,7 @@ function MainContainer() {
 
     const news = Object.entries(company)
 
-    console.log(userBookmark);
+    console.log(news);
 
     const items = news.map((item, key) => {
         if (search === "") {
@@ -173,7 +190,7 @@ function MainContainer() {
             // userBookmark.map((userBookmark, key) => {
             //     console.log(userBookmark.companyname);
             // })
-            let end = item[1].plan.split('~')[1]
+            let end = item[1].종료일.split("(")[0]
 
             console.log(date);
             console.log(end);
