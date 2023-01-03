@@ -43,6 +43,11 @@ https://user-images.githubusercontent.com/79193811/210316218-fb668f0a-9519-4b1e-
 
 * Swagger API
 
+### Swagger API 문서로 만든 Restful api 문서
+
+![image](https://user-images.githubusercontent.com/79193811/210316493-470f8679-3a60-4b0b-849a-e73858381597.png)
+
+
 ### 깨달은점
 
 * 백엔드만 해온 제가 react를 접해보면서 어떤식으로 렌더링이 되는지 useEffect useState를 어느때 사용하는 지 알 수있었습니다.
