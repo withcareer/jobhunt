@@ -1,4 +1,5 @@
 import "./header.css"
+import axios from "axios";
 
 import React, { useState, useEffect } from 'react';
 
@@ -14,6 +15,16 @@ function Header() {
 		}
 	});
 
+	const logout = () =>{
+		axios.get("/jobhunt/v1/Users/logout", {
+			headers: {
+					refreshTokenId: `${sessionStorage.getItem("refreshTokenId")}`
+			}
+	})
+
+		sessionStorage.clear()
+	}
+	
 
 	return (
 		<div className="Header">
@@ -24,9 +35,11 @@ function Header() {
 				</div>
 				<ul className="navMenu">
 					{/* 로그인 후 메뉴 표시 */}
-					{isLogin ? <li><a className="menu" href="/mypage">{"마이페이지"}</a></li> : <li></li>}
-					{isLogin ? (<li><a className="menu" onClick={() => { sessionStorage.clear() }} href="/">{'로그아웃'}</a></li>)
-						: (<li><a className="menu" href="/login">{'로그인'}</a></li>)}
+					{isLogin ? <li><a className="menu" href="/jobhunt/v1/Users/mypage">{"마이페이지"}</a></li> : <li></li>}
+					{isLogin ? (<li><a className="menu" onClick={() => {
+						logout()
+					}} href="/jobhunt/v1/Users/">{'로그아웃'}</a></li>)
+						: (<li><a className="menu" href="/jobhunt/v1/Users/login">{'로그인'}</a></li>)}
 				</ul>
 			</nav>
 		</div>
@@ -34,7 +47,7 @@ function Header() {
 }
 
 const clickLogo = () => {
-	document.location.href = '/';
+	document.location.href = '/jobhunt/v1/Users/';
 }
 
 export default Header;

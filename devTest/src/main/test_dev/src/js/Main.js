@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Footer from './Form/Footer';
 import Header from './Form/Header';
 import axios from "axios";
+import mainLogo from "./img/job_banner.PNG"
 // import news from "./json/news.json"
 import "./Main.css";
 import Swal from "sweetalert2";
@@ -19,8 +20,25 @@ function Main() {
 }
 
 // console.log(news);
-let date = new Date().getMonth() + 1 + "/" + new Date().getDate()
-// console.log(date);
+
+function left(value) {
+    if (value >= 10) {
+        return value;
+    }
+
+    return `0${value}`;
+}
+
+function toStringByFormatting(source) {
+    const year = source.getFullYear();
+    const month = left(source.getMonth() + 1);
+    const day = left(source.getDate());
+
+    return [year, month, day].join(".");
+}
+
+let date = toStringByFormatting(new Date())
+console.log(date);
 
 const ID = sessionStorage.getItem("tokenId")
 const refreshTokenId = sessionStorage.getItem("refreshTokenId")
@@ -49,7 +67,7 @@ function MainContainer() {
 
     const run = () => {
         axios
-            .get("/home", {
+            .get("/jobhunt/v1/Users/home", {
                 headers: {
                     Authorization: `${sessionStorage.getItem("tokenId")}`,
                     refreshTokenId: `${sessionStorage.getItem("refreshTokenId")}`
@@ -66,7 +84,7 @@ function MainContainer() {
                 if (res.data[0] == 'false') {
                     sessionStorage.removeItem("tokenId")
                     console.log(res.data);
-                    axios.get("/refresh", {
+                    axios.get("/jobhunt/v1/Auth/refresh", {
                         headers: {
                             refreshTokenId: `${sessionStorage.getItem("refreshTokenId")}`
                         }
@@ -99,9 +117,9 @@ function MainContainer() {
                                 // 만약 Promise리턴을 받으면,
                                 if (result.isConfirmed) { // 만약 모달창에서 confirm 버튼을 눌렀다면
         
-                                    window.location.href = "/login";
+                                    window.location.href = "/jobhunt/v1/Users/login";
                                 }else{
-                                    window.location.href = "/";
+                                    window.location.href = "/jobhunt/v1/Users/";
                                 }
                             });
                         }
@@ -157,13 +175,13 @@ function MainContainer() {
             const jobKorea = "https://www.jobkorea.co.kr" + link;
             window.open(jobKorea);
         } else {
-            window.location.href = "/";
+            window.location.href = "/jobhunt/v1/Users/";
         }
     }
 
     const news = Object.entries(company)
 
-    console.log(userBookmark);
+    // console.log(news);
 
     const items = news.map((item, key) => {
         if (search === "") {
@@ -173,7 +191,7 @@ function MainContainer() {
             // userBookmark.map((userBookmark, key) => {
             //     console.log(userBookmark.companyname);
             // })
-            let end = item[1].plan.split('~')[1]
+            let end = item[1].종료일.split("(")[0]
 
             console.log(date);
             console.log(end);
@@ -214,7 +232,7 @@ function MainContainer() {
                 // 만약 Promise리턴을 받으면,
                 if (result.isConfirmed) { // 만약 모달창에서 confirm 버튼을 눌렀다면
 
-                    window.location.href = "/login";
+                    window.location.href = "/jobhunt/v1/Users/login";
                 }
             });
         }
@@ -227,7 +245,7 @@ function MainContainer() {
             console.log(ID, companyname, start, end, img, link);
 
             axios
-                .post("/company-save",
+                .post("/jobhunt/v1/Users/company-save",
                     {
                         companyname: companyname,
                         companyimg: img,
@@ -266,7 +284,7 @@ function MainContainer() {
     return (
         <div className="banner_box">
 
-            <img className="bannerImg" alt="banner_01" src="img/job_banner.PNG" />
+            <img className="bannerImg" alt="banner_01" src = {mainLogo} />
 
             <br></br>
             <span className="banner_text">원하는 회사의 정보를 얻어가세요!</span>

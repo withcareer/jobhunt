@@ -12,10 +12,10 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path = '/' element = {<Main/>}/>
-        <Route path='/login' element={<Login />}/>
-        <Route path='/join' element={<Join />}/>
-        <Route path='/myPage' element={<MyPage />}/>
+        <Route path = '/jobhunt/v1/Users/' element = {<Main/>}/>
+        <Route path='/jobhunt/v1/Users/login' element={<Login />}/>
+        <Route path='/jobhunt/v1/Users/join' element={<Join />}/>
+        <Route path='/jobhunt/v1/Users/myPage' element={<MyPage />}/>
 
       </Routes>
     </BrowserRouter>
