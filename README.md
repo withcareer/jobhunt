@@ -68,6 +68,8 @@ https://user-images.githubusercontent.com/79193811/210316218-fb668f0a-9519-4b1e-
 
 * redis를 사용하여 주기적으로 token값을 바꿔주는 Refresh토큰값을 캐시메모리에 저장시켜 트래픽을 최소화 시켰습니다.
 
-###### 참고자료:https://dev-coco.tistory.com/97
+###### 참고자료
+* https://dev-coco.tistory.com/97
+* https://minwoo-it-factory.tistory.com/category/Redis
 
 
