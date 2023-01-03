@@ -17,25 +17,23 @@ https://user-images.githubusercontent.com/79193811/210316218-fb668f0a-9519-4b1e-
 
 ### 사용한 기술 및 라이브러리
 
-* Spring framework
+* BackEndTool: Spring framework
 
-* React
+* FrontTool: React
 
-* Docker
+* Container : Docker ,DockerCompose
 
-* AWS EC2
+* Infra : AWS EC2
 
-* Google Driver
+* crawling : Selenium , Google Driver
 
-* Git Action
+* Auth: JWT 
 
-* Selenium
++ Nosql CacheMemoery : Redis
 
-* JWT 
+* DevOps:Jenkins , GitAction
 
-+ Redis
-
-* Swagger API
+* API Document: Swagger API
 
 ### Swagger API 문서로 만든 Restful api 문서
 
