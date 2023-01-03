@@ -48,7 +48,7 @@ function Join() {
 
   const idCheck = () => {
     axios
-      .post("/idCheck", { email: email })
+      .post("/jobhunt/v1/Users/idCheck", { email: email })
       .then((idRes) => {
         console.log(idRes);
         console.log("idRes.data :: ", idRes.data);
@@ -69,7 +69,7 @@ function Join() {
 
   const pwCheck = () => {
     axios
-      .post("/passCheck", { pass: pass, pass2: pass2 })
+      .post("/jobhunt/v1/Users/passCheck", { pass: pass, pass2: pass2 })
       .then((passRes) => {
         console.log(passRes);
         console.log("passRes.data :: ", passRes.data);
@@ -87,7 +87,7 @@ function Join() {
 
   const nickCheck = () => {
     axios
-      .post("/nickname", { nickname: nickname })
+      .post("/jobhunt/v1/Users/nickname", { nickname: nickname })
       .then((nickRes) => {
         console.log(nickRes);
         console.log("nickRes.data :: ", nickRes.data);
@@ -124,7 +124,7 @@ function Join() {
         console.log("birth : ", birth);
         console.log("phone : ", phone);
         axios
-          .post("http://localhost:8080/join", {
+          .post("/jobhunt/v1/Users/join", {
             email: email,
             pass: pass,
             pass2: pass2,
@@ -141,7 +141,7 @@ function Join() {
                 // timer: 100000,
             }).then((q) => {
               if(q.isConfirmed){
-                document.location.href = "/";
+                document.location.href = "/jobhunt/v1/Users/";
               }
             }
             );
@@ -173,7 +173,7 @@ function Join() {
   
   return (
 	<div className="JoinForm">
-      <div className="navLogo" onClick={(e) => {clickBtn("/", e)}}>
+      <div className="navLogo" onClick={(e) => {clickBtn("/jobhunt/v1/Users/", e)}}>
         <span className="navLogo">JOB-HUNTER </span>
       </div>
 	  <div className="InputId">
@@ -237,9 +237,9 @@ function Join() {
 const clickBtn = (params, e) => {
     console.log(params);
     if(params == "/") {
-        document.location.href = "/";
+        document.location.href = "/jobhunt/v1/Users/";
     } else if(params == "Join") {
-        document.location.href = "/join";
+        document.location.href = "/jobhunt/v1/Users/join";
     }
 };
 

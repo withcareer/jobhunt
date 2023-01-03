@@ -37,7 +37,7 @@ function Login() {
             passRef.current.focus();
         } else {
             axios
-                .post("/login", {
+                .post("/jobhunt/v1/Users/login", {
                     email: email,
                     pass: pass,
                 })
@@ -53,7 +53,7 @@ function Login() {
                             // timer: 100000,
                         }).then((q) => {
                             if (q.isConfirmed) {
-                                document.location.href = "/login";
+                                document.location.href = "/jobhunt/v1/Users/login";
                             }
                         }
 
@@ -75,7 +75,7 @@ function Login() {
                         }).then((q) => {
                             if (q.isConfirmed) {
 
-                                document.location.href = "/";
+                                document.location.href = "/jobhunt/v1/Users/";
 
                             }
                         }
@@ -133,7 +133,7 @@ function Login() {
                         </a>
                     </li>
                     <li className="list-item-text">
-                        <a href="/join" id="signUp">
+                        <a href="/jobhunt/v1/Users/join" id="signUp">
                             회원가입
                         </a>
                     </li>
@@ -144,7 +144,7 @@ function Login() {
 }
 
 const clickLogo = () => {
-    document.location.href = "/";
+    document.location.href = "/jobhunt/v1/Users/";
 };
 
 export default Login;

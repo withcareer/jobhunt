@@ -40,9 +40,10 @@
     </insert>
 
     <select id="get_HUNTUSER_BOOKMARK" parameterType="int" resultType="HUNTUSER_BOOKMARK">
-        SELECT   *
-        FROM    HUNTUSER_BOOKMARK
-        WHERE   uno = #{uno}
+        SELECT *
+        FROM HUNTUSER_BOOKMARK
+        WHERE to_char(sysdate,'mm/dd') BETWEEN company_start
+        AND company_end and uno=#{uno}
     </select>
 
     <delete id="delete_User_BookMark">

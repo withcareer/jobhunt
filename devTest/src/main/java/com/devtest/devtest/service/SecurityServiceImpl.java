@@ -58,8 +58,8 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public String jwtExpireCheck(int time) {
-        int CurrentTime = (int) ((new Date().getTime()));
-
+        int CurrentTime = (int) ((new Date().getTime() + 60 * 60 * 1000) / 1000);
+        System.out.println("현재 시간 :::" + CurrentTime);
         if (time >= CurrentTime) {
             System.out.println("유효시간 남음!_!_!_!_!");
             return "true";
