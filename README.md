@@ -72,6 +72,28 @@ https://user-images.githubusercontent.com/79193811/210316218-fb668f0a-9519-4b1e-
 
 * 백엔드에서 React.js 라우터에 있는 주소로 주소를 임의 변경하면, 매핑되는 주소가 없으므로 404 오류가 생긴다. 이를 방지하기 위해 에러가 발생하면 프론트엔드에서 작성한 frontend/src/index.html을 전송한다는 것을 알게되었습니다.
 
+<pre><code>
+  @Controller
+public class WebController implements ErrorController {
+    // 백엔드에서 React.js 라우터에 있는 주소로 주소를 임의 변경하면,
+    // 매핑되는 주소가 없으므로 404 오류가 생긴다.
+    // 이를 방지하기 위해 에러가 발생하면 프론트엔드에서 작성한 frontend/src/index.html을 전송한다.
+
+    @ApiOperation(value="refresh_token", notes ="백엔드에서 React.js 라우터에 있는 주소로 주소를 임의 변경하면,\n" +
+            "    // 매핑되는 주소가 없으므로 404 오류가 생긴다.\n" +
+            "    // 이를 방지하기 위해 에러가 발생하면 프론트엔드에서 작성한 frontend/src/index.html을 전송한다.")
+    @GetMapping({ "/", "/error" })
+    public String index() {
+        return "index";
+    }
+
+    /*400에러 발생 시 getErrorPath() 호출*/
+    public String getErrorPath() {
+        return "/error";
+    }
+}
+</pre></code>
+
 ###### 참고자료
 * https://dev-coco.tistory.com/97
 * https://minwoo-it-factory.tistory.com/category/Redis
