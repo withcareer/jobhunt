@@ -66,6 +66,8 @@ https://user-images.githubusercontent.com/79193811/210316218-fb668f0a-9519-4b1e-
 
 * Swagger API를 사용함으로써 API문서작성 방법을 터득하였습니다.
 
+* JWT에서 보안을 위해 Refresh토큰값의 만료시간은 길고, access Token값의 만료시간은 짧게 설정하여 주기적으로 access token값을 변경해야 한다는 것을 깨달았습니다.
+
 * redis를 사용하여 주기적으로 token값을 바꿔주는 Refresh토큰값을 캐시메모리에 저장시켜 트래픽을 최소화 시켰습니다.
 
 ###### 참고자료
