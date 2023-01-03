@@ -70,6 +70,8 @@ https://user-images.githubusercontent.com/79193811/210316218-fb668f0a-9519-4b1e-
 
 * redis를 사용하여 주기적으로 token값을 바꿔주는 Refresh토큰값을 캐시메모리에 저장시켜 트래픽을 최소화 시켰습니다.
 
+* 백엔드에서 React.js 라우터에 있는 주소로 주소를 임의 변경하면, 매핑되는 주소가 없으므로 404 오류가 생긴다. 이를 방지하기 위해 에러가 발생하면 프론트엔드에서 작성한 frontend/src/index.html을 전송한다.
+
 ###### 참고자료
 * https://dev-coco.tistory.com/97
 * https://minwoo-it-factory.tistory.com/category/Redis
