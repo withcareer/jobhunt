@@ -45,7 +45,7 @@ https://user-images.githubusercontent.com/79193811/210316218-fb668f0a-9519-4b1e-
 
 ### Swagger API 문서로 만든 Restful api 문서
 
-![image](https://user-images.githubusercontent.com/79193811/210316493-470f8679-3a60-4b0b-849a-e73858381597.png)
+![image](https://user-images.githubusercontent.com/79193811/210316563-c8a8c2e1-d6b4-447d-8419-ee5777cc6ac3.png)
 
 
 ### 깨달은점
