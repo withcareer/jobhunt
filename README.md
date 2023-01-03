@@ -35,6 +35,11 @@ https://user-images.githubusercontent.com/79193811/210316218-fb668f0a-9519-4b1e-
 
 * API Document: Swagger API
 
+### CICD는 다음과 같은 형태로 이루어집니다.
+
+![image](https://user-images.githubusercontent.com/79193811/210366331-35c248d1-6a85-41c6-aea6-6284ed1d8c03.png)
+
+
 ### Swagger API 문서로 만든 Restful api 문서
 
 ![image](https://user-images.githubusercontent.com/79193811/210316563-c8a8c2e1-d6b4-447d-8419-ee5777cc6ac3.png)
